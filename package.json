@@ -1,0 +1,17 @@
+{
+  "name": "nodecongress-sqlite-workshop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "01": "node --test 01-basics/index.test.js",
+    "02": "node --test 02-statements/index.test.js",
+    "03": "node --test 03-sessions/index.test.js",
+    "04": "node --test 04-user-defined-functions/index.test.js",
+    "05": "node --test 05-backup/index.test.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "Edy Silva <edigleyssonsilva@gmail.com>",
+  "license": "MIT",
+  "description": "Base project for the SQLite workshop at NodeCongress 2025"
+}
