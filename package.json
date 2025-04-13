@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "test": "node --test",
     "01": "node --test 01-basics/index.test.js",
     "02": "node --test 02-statements/index.test.js",
     "03": "node --test 03-sessions/index.test.js",

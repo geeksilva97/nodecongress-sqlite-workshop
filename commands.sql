@@ -10,7 +10,6 @@ INSERT INTO users (name, email) VALUES ('Ada Lovelace', 'ada@gambiarra.com'),
                                        ('Colin Ihrig', 'cjihrig@gmail.com');
 
 -- to retrieve users
-SELECT * FROM users;
 SELECT * FROM users WHERE email LIKE '%@gambiarra.com';
 
 -- to update users
