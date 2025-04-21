@@ -1,4 +1,4 @@
-import { describe, test } from 'node:test';
+import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
 import { getAllUsers, getAllUsersIterator, getUserByEmail, runStmt, runStmtWithNamedParams } from './index.js'
 

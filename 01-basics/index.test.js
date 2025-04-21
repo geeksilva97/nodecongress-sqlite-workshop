@@ -1,18 +1,13 @@
 import { describe, test } from 'node:test';
-import { conn, createTables } from './index.js'
+import { createTables, insertRecords, selectRecords, updateRecords, deleteRecords } from './index.js'
+import { DatabaseSync } from 'node:sqlite';
+
+const conn = new DatabaseSync(':memory:');
 
 describe('basics', () => {
-  test('connection to sqlite', (t) => {
-    t.assert.doesNotThrow(() => {
-      const randomInteger = Math.floor(Math.random() * 10000);
-      const r = conn.prepare(`SELECT ${randomInteger} as value`).get();
-      t.assert.equal(r.value, randomInteger, 'should be able to run a query');
-    }, 'ensure the exported conn is a sqlite connection (aka DatabaseSync instance)');
-  });
-
   test('tables are created', (t) => {
     conn.exec('DROP TABLE IF EXISTS users;');
-    createTables();
+    createTables(conn);
 
     const tableInfo = conn.prepare('PRAGMA table_info(users)').all();
     const tableFields = Object.values(tableInfo);
@@ -51,8 +46,75 @@ describe('basics', () => {
     );
   });
 
-  test.todo('records are inserted');
-  test.todo('records are selected');
-  test.todo('records are updated');
-  test.todo('records are deleted');
+  test('records are inserted', (t) => {
+    insertRecords(conn);
+    const result = conn.prepare('SELECT * FROM users').all();
+
+    t.assert.deepStrictEqual(result, [
+      {
+        __proto__: null,
+        id: 1,
+        name: 'Ada Lovelace',
+        email: 'ada@gambiarra.com'
+      },
+      {
+        __proto__: null,
+        id: 2,
+        name: 'Linus Torvalds',
+        email: 'linus@gambiarra.com'
+      },
+      {
+        __proto__: null,
+        id: 3,
+        name: 'Colin Ihrig',
+        email: 'cjihrig@gmail.com'
+      }
+    ]);
+  });
+
+  // TODO: remove skip once you are able to deal with statements
+  test.skip('records are selected', (t) => {
+    t.assert.deepStrictEqual(selectRecords(conn), [
+      {
+        __proto__: null,
+        id: 1,
+        name: 'Ada Lovelace',
+        email: 'ada@gambiarra.com'
+      },
+      {
+        __proto__: null,
+        id: 2,
+        name: 'Linus Torvalds',
+        email: 'linus@gambiarra.com'
+      }
+    ]);
+  });
+
+  test('records are updated', (t) => {
+    let result = conn.prepare('SELECT * FROM users WHERE id = 2').get();
+    t.assert.deepStrictEqual(result, {
+      __proto__: null,
+      id: 2,
+      name: 'Linus Torvalds',
+      email: 'linus@gambiarra.com'
+    });
+
+    updateRecords(conn);
+
+    result = conn.prepare('SELECT * FROM users WHERE id = 2').get();
+    t.assert.deepStrictEqual(result, {
+      __proto__: null,
+      id: 2,
+      name: 'Linus Torvalds',
+      email: 'linus@gitnation.com'
+    });
+  });
+
+  test('records are deleted', (t) => {
+    let result = conn.prepare('SELECT COUNT(*) AS count FROM users').get();
+    t.assert.equal(result.count, 3)
+    deleteRecords(conn)
+    result = conn.prepare('SELECT COUNT(*) AS count FROM users').get();
+    t.assert.equal(result.count, 2)
+  });
 });
