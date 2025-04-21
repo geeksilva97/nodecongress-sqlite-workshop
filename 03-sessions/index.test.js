@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import { describe, test } from 'node:test';
+import { test } from 'node:test';
 import { getChangeset } from './index.js'
 
 const sourceDb = new DatabaseSync(':memory:');
